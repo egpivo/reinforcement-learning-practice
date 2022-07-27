@@ -1,4 +1,3 @@
-
 import pickle
 from .state import State
 from .actor import HumanPlayer, Judger, Player
@@ -6,7 +5,6 @@ from .info import BoardType
 
 BOARD_ROWS = BoardType.BOARD_ROWS.value
 BOARD_COLS = BoardType.BOARD_COLS.value
-
 
 
 def get_all_states_impl(current_state, current_symbol, all_states):
@@ -19,9 +17,8 @@ def get_all_states_impl(current_state, current_symbol, all_states):
                     is_end = new_state.is_end()
                     all_states[new_hash] = (new_state, is_end)
                     if not is_end:
-                        get_all_states_impl(
-                            new_state, -current_symbol, all_states)
-                            
+                        get_all_states_impl(new_state, -current_symbol, all_states)
+
 
 def get_all_states():
     current_symbol = 1
