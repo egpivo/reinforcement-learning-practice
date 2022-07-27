@@ -1,9 +1,11 @@
 import numpy as np
+
 from .info import BoardType
 
 BOARD_ROWS = BoardType.BOARD_ROWS.value
 BOARD_COLS = BoardType.BOARD_COLS.value
-BOARD_SIZE =  BoardType.BOARD_SIZE.value
+BOARD_SIZE = BoardType.BOARD_SIZE.value
+
 
 class State:
     def __init__(self) -> None:
@@ -77,15 +79,15 @@ class State:
     # print the board
     def print_state(self):
         for i in range(BOARD_ROWS):
-            print('-------------')
-            out = '| '
+            print("-------------")
+            out = "| "
             for j in range(BOARD_COLS):
                 if self.data[i, j] == 1:
-                    token = '*'
+                    token = "*"
                 elif self.data[i, j] == -1:
-                    token = 'x'
+                    token = "x"
                 else:
-                    token = '0'
-                out += token + ' | '
+                    token = "0"
+                out += token + " | "
             print(out)
-        print('-------------')
+        print("-------------")
