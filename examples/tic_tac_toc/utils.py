@@ -1,7 +1,8 @@
 import pickle
-from .state import State
-from .actor import HumanPlayer, Judger, Player
+
+from .actor import AgentPlayer, HumanPlayer, Judger
 from .info import BoardType
+from .state import State
 
 BOARD_ROWS = BoardType.BOARD_ROWS.value
 BOARD_COLS = BoardType.BOARD_COLS.value
