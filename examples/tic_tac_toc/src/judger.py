@@ -3,10 +3,9 @@ import pickle
 import numpy as np
 
 from .info import BoardType
+from .player import Player
 from .state import State
 from .utils import get_all_states
-from .player import Player
-
 
 BOARD_ROWS = BoardType.BOARD_ROWS.value
 BOARD_COLS = BoardType.BOARD_COLS.value

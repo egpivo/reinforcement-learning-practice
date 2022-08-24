@@ -18,7 +18,7 @@ class Player:
         return NotImplemented
 
     def set_symbol(self):
-        return NotImplemented        
+        return NotImplemented
 
     def act(self):
         return NotImplemented

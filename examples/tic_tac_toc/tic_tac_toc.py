@@ -1,7 +1,8 @@
-from src.player import AgentPlayer, HumanPlayer
-from src.judger import Judger
-from src.info import BoardType
 import logging
+
+from src.info import BoardType
+from src.judger import Judger
+from src.player import AgentPlayer, HumanPlayer
 
 BOARD_ROWS = BoardType.BOARD_ROWS.value
 BOARD_COLS = BoardType.BOARD_COLS.value
