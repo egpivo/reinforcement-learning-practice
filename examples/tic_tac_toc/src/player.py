@@ -9,22 +9,22 @@ from .utils import get_all_states
 BOARD_ROWS = BoardType.BOARD_ROWS.value
 BOARD_COLS = BoardType.BOARD_COLS.value
 
-# all possible board configurations
+
 all_states = get_all_states()
 
 
 class Player:
-    def reset(self):
+    def state(self):
         return NotImplemented
+
+    def set_symbol(self):
+        return NotImplemented        
 
     def act(self):
         return NotImplemented
 
 
-# AI player
 class AgentPlayer(Player):
-    # @step_size: the step size to update estimations
-    # @epsilon: the probability to explore
     def __init__(self, step_size=0.1, epsilon=0.1):
         self.estimations = dict()
         self.step_size = step_size
@@ -94,16 +94,15 @@ class AgentPlayer(Player):
         action.append(self.symbol)
         return action
 
-    def save_policy(self):
-        with open(
-            "policy_%s.bin" % ("first" if self.symbol == 1 else "second"), "wb"
-        ) as f:
+    def _get_file_name(self) -> str:
+        return f"policy_{'first' if self.symbol == 1 else 'second'}.bin"
+
+    def save_policy(self) -> None:
+        with open(self._get_file_name(), "wb") as f:
             pickle.dump(self.estimations, f)
 
-    def load_policy(self):
-        with open(
-            "policy_%s.bin" % ("first" if self.symbol == 1 else "second"), "rb"
-        ) as f:
+    def load_policy(self) -> None:
+        with open(self._get_file_name(), "rb") as f:
             self.estimations = pickle.load(f)
 
 
@@ -118,9 +117,6 @@ class HumanPlayer(Player):
         self.keys = ["q", "w", "e", "a", "s", "d", "z", "x", "c"]
         self.state = None
 
-    def reset(self):
-        pass
-
     def set_state(self, state):
         self.state = state
 
@@ -134,47 +130,3 @@ class HumanPlayer(Player):
         i = data // BOARD_COLS
         j = data % BOARD_COLS
         return i, j, self.symbol
-
-
-class Judger:
-    # @player1: the player who will move first, its chessman will be 1
-    # @player2: another player with a chessman -1
-    def __init__(self, player1: Player, player2: Player) -> None:
-        self.p1 = player1
-        self.p2 = player2
-        self.current_player = None
-        self.p1_symbol = 1
-        self.p2_symbol = -1
-        self.p1.set_symbol(self.p1_symbol)
-        self.p2.set_symbol(self.p2_symbol)
-        self.current_state = State()
-
-    def reset(self):
-        self.p1.reset()
-        self.p2.reset()
-
-    def alternate(self):
-        while True:
-            yield self.p1
-            yield self.p2
-
-    # @print_state: if True, print each board during the game
-    def play(self, print_state=False):
-        alternator = self.alternate()
-        self.reset()
-        current_state = State()
-        self.p1.set_state(current_state)
-        self.p2.set_state(current_state)
-        if print_state:
-            current_state.print_state()
-        while True:
-            player = next(alternator)
-            i, j, symbol = player.act()
-            next_state_hash = current_state.next_state(i, j, symbol).hash()
-            current_state, is_end = all_states[next_state_hash]
-            self.p1.set_state(current_state)
-            self.p2.set_state(current_state)
-            if print_state:
-                current_state.print_state()
-            if is_end:
-                return current_state.winner

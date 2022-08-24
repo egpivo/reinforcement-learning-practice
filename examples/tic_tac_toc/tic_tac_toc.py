@@ -1,13 +1,17 @@
-from .actor import AgentAPlayer, HumanPlayer, Judger
-from .info import BoardType
+from src.player import AgentPlayer, HumanPlayer
+from src.judger import Judger
+from src.info import BoardType
+import logging
 
 BOARD_ROWS = BoardType.BOARD_ROWS.value
 BOARD_COLS = BoardType.BOARD_COLS.value
 
+logging.basicConfig(level=logging.INFO)
+
 
 def train(epochs, print_every_n=500):
-    player1 = AgentAPlayer(epsilon=0.01)
-    player2 = AgentAPlayer(epsilon=0.01)
+    player1 = AgentPlayer(epsilon=0.01)
+    player2 = AgentPlayer(epsilon=0.01)
     judger = Judger(player1, player2)
     player1_win = 0.0
     player2_win = 0.0
@@ -18,9 +22,8 @@ def train(epochs, print_every_n=500):
         if winner == -1:
             player2_win += 1
         if i % print_every_n == 0:
-            print(
-                "Epoch %d, player 1 winrate: %.02f, player 2 winrate: %.02f"
-                % (i, player1_win / i, player2_win / i)
+            logging.info(
+                f"Epoch {i}, player 1 winrate: {player1_win / i:.02f}, player 2 winrate: {player2_win / i:.02f}"
             )
         player1.backup()
         player2.backup()
@@ -30,8 +33,8 @@ def train(epochs, print_every_n=500):
 
 
 def compete(turns: int):
-    player1 = AgentAPlayer(epsilon=0)
-    player2 = AgentAPlayer(epsilon=0)
+    player1 = AgentPlayer(epsilon=0)
+    player2 = AgentPlayer(epsilon=0)
     judger = Judger(player1, player2)
     player1.load_policy()
     player2.load_policy()
@@ -44,9 +47,8 @@ def compete(turns: int):
         if winner == -1:
             player2_win += 1
         judger.reset()
-    print(
-        "%d turns, player 1 win %.02f, player 2 win %.02f"
-        % (turns, player1_win / turns, player2_win / turns)
+    logging.info(
+        f"{turns} turns, player 1 win {player1_win / turns:.02f}, player 2 win {player2_win / turns:.02f}"
     )
 
 
@@ -55,16 +57,16 @@ def compete(turns: int):
 def play():
     while True:
         player1 = HumanPlayer()
-        player2 = AgentAPlayer(epsilon=0)
+        player2 = AgentPlayer(epsilon=0)
         judger = Judger(player1, player2)
         player2.load_policy()
         winner = judger.play()
         if winner == player2.symbol:
-            print("You lose!")
+            logging.info("You lose!")
         elif winner == player1.symbol:
-            print("You win!")
+            logging.info("You win!")
         else:
-            print("It is a tie!")
+            logging.info("It is a tie!")
 
 
 if __name__ == "__main__":

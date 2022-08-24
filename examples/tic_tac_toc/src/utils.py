@@ -1,6 +1,3 @@
-import pickle
-
-from .actor import AgentPlayer, HumanPlayer, Judger
 from .info import BoardType
 from .state import State
 
