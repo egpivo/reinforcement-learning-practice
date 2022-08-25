@@ -34,7 +34,7 @@ class Player:
 
 
 class AgentPlayer(Player):
-    def __init__(self, step_size=0.1, epsilon=0.1):
+    def __init__(self, step_size: float = 0.1, epsilon: float = 0.1) -> None:
         self.estimations = dict()
         self.step_size = step_size
         self.epsilon = epsilon
@@ -42,7 +42,7 @@ class AgentPlayer(Player):
         self.greedy = []
         self.symbol = 0
 
-    def reset(self):
+    def reset(self) -> None:
         self.states = []
         self.greedy = []
 
@@ -50,7 +50,7 @@ class AgentPlayer(Player):
         self.states.append(state)
         self.greedy.append(True)
 
-    def set_symbol(self, symbol):
+    def set_symbol(self, symbol: int) -> None:
         self.symbol = symbol
         for hash_val in all_states:
             state, is_end = all_states[hash_val]
@@ -66,7 +66,7 @@ class AgentPlayer(Player):
                 self.estimations[hash_val] = 0.5
 
     # update value estimation
-    def backup(self):
+    def backup(self) -> None:
         states = [state.hash() for state in self.states]
 
         for i in reversed(range(len(states) - 1)):
@@ -77,7 +77,7 @@ class AgentPlayer(Player):
             self.estimations[state] += self.step_size * td_error
 
     # choose an action based on the state
-    def act(self):
+    def act(self) -> list:
         state = self.states[-1]
         next_states = []
         next_positions = []
@@ -115,27 +115,32 @@ class AgentPlayer(Player):
             self.estimations = pickle.load(f)
 
 
-# human interface
-# input a number to put a chessman
-# | q | w | e |
-# | a | s | d |
-# | z | x | c |
 class HumanPlayer(Player):
-    def __init__(self, **kwargs):
+    """
+    Notes
+    -----
+    - human interface - input a number to put a chessman
+        | q | w | e |
+        | a | s | d |
+        | z | x | c |
+    """
+
+    def __init__(self) -> None:
         self.symbol = None
         self.keys = ["q", "w", "e", "a", "s", "d", "z", "x", "c"]
         self.state = None
 
-    def set_state(self, state):
+    def set_state(self, state) -> None:
         self.state = state
 
-    def set_symbol(self, symbol):
+    def set_symbol(self, symbol) -> None:
         self.symbol = symbol
 
-    def act(self):
+    def act(self) -> list:
         self.state.print_state()
         key = input("Input your position:")
         data = self.keys.index(key)
         i = data // BOARD_COLS
         j = data % BOARD_COLS
-        return i, j, self.symbol
+        action = [i, j, self.symbol]
+        return action

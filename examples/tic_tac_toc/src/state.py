@@ -40,12 +40,11 @@ class State:
         if self.end is not None:
             return self.end
         results = []
-        # check row
+
         for i in range(BOARD_ROWS):
             results.append(np.sum(self.data[i, :]))
-        # check columns
-        for i in range(BOARD_COLS):
-            results.append(np.sum(self.data[:, i]))
+        for j in range(BOARD_COLS):
+            results.append(np.sum(self.data[:, j]))
 
         # check diagonals
         trace = 0
@@ -86,7 +85,7 @@ class State:
         return new_state
 
     # print the board
-    def print_state(self):
+    def print_state(self) -> None:
         for i in range(BOARD_ROWS):
             print("-------------")
             out = "| "

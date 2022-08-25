@@ -8,6 +8,7 @@
 # declaration at the top                                              #
 #######################################################################
 import pickle
+from typing import Any, Generator
 
 import numpy as np
 
@@ -34,32 +35,34 @@ class Judger:
         self.player2.set_symbol(PLAYER2_SYMBOL)
         self.current_state = State()
 
-    def reset(self):
+    def reset(self) -> None:
         self.player1.reset()
         self.player2.reset()
 
-    def alternate(self):
+    def alternate(self) -> Generator:
         while True:
             yield self.player1
             yield self.player2
 
-    # @print_state: if True, print each board during the game
-    def play(self, print_state=False):
+    def play(self, verbose=False) -> Any:
         alternator = self.alternate()
         self.reset()
         current_state = State()
         self.player1.set_state(current_state)
         self.player2.set_state(current_state)
-        if print_state:
+        if verbose:
             current_state.print_state()
         while True:
             player = next(alternator)
             i, j, symbol = player.act()
+
             next_state_hash = current_state.next_state(i, j, symbol).hash()
             current_state, is_end = all_states[next_state_hash]
+
             self.player1.set_state(current_state)
             self.player2.set_state(current_state)
-            if print_state:
+
+            if verbose:
                 current_state.print_state()
             if is_end:
                 return current_state.winner
