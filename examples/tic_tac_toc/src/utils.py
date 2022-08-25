@@ -1,3 +1,12 @@
+#######################################################################
+# Copyright (C)                                                       #
+# 2016 - 2018 Shangtong Zhang(zhangshangtong.cpp@gmail.com)           #
+# 2016 Jan Hakenberg(jan.hakenberg@gmail.com)                         #
+# 2016 Tian Jun(tianjun.cpp@gmail.com)                                #
+# 2016 Kenta Shimada(hyperkentakun@gmail.com)                         #
+# Permission given to modify the code as long as you keep this        #
+# declaration at the top                                              #
+#######################################################################
 from .info import BoardType
 from .state import State
 
@@ -5,7 +14,9 @@ BOARD_ROWS = BoardType.BOARD_ROWS.value
 BOARD_COLS = BoardType.BOARD_COLS.value
 
 
-def get_all_states_impl(current_state, current_symbol, all_states):
+def get_all_states_impl(
+    current_state: State, current_symbol: int, all_states: dict
+) -> None:
     for i in range(BOARD_ROWS):
         for j in range(BOARD_COLS):
             if current_state.data[i][j] == 0:
@@ -18,7 +29,7 @@ def get_all_states_impl(current_state, current_symbol, all_states):
                         get_all_states_impl(new_state, -current_symbol, all_states)
 
 
-def get_all_states():
+def get_all_states() -> dict:
     current_symbol = 1
     current_state = State()
     all_states = dict()
