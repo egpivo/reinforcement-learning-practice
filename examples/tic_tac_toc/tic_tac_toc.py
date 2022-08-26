@@ -26,7 +26,7 @@ def train(epochs, print_every_n=500):
     player1_win = 0.0
     player2_win = 0.0
     for i in range(1, epochs + 1):
-        winner = judger.play(print_state=False)
+        winner = judger.play(verbose=False)
         if winner == 1:
             player1_win += 1
         if winner == -1:

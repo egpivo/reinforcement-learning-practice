@@ -17,18 +17,25 @@ BOARD_SIZE = BoardType.BOARD_SIZE.value
 
 
 class State:
+    """
+    Notes
+    -----
+    - Board
+       - n (rows) x n (columns)
+       - cell
+          - 1: player who moves first
+          - -1: player who moves second
+          - 0: empty
+    """
+
     def __init__(self) -> None:
-        # the board is represented by an n * n array,
-        # 1 represents a chessman of the player who moves first,
-        # -1 represents a chessman of another player
-        # 0 represents an empty position
         self.data = np.zeros((BOARD_ROWS, BOARD_COLS))
         self.winner = None
         self.hash_val = None
         self.end = None
 
-    # compute the hash value for one state, it's unique
     def hash(self) -> int:
+        """Note: Hash(X) = \sum_{i}f(i); f(i) = 3f(i-1) + X(i) + 1"""
         if self.hash_val is None:
             self.hash_val = 0
             for i in np.nditer(self.data):
@@ -46,14 +53,10 @@ class State:
         for j in range(BOARD_COLS):
             results.append(np.sum(self.data[:, j]))
 
-        # check diagonals
-        trace = 0
-        reverse_trace = 0
-        for i in range(BOARD_ROWS):
-            trace += self.data[i, i]
-            reverse_trace += self.data[i, BOARD_ROWS - 1 - i]
-        results.append(trace)
-        results.append(reverse_trace)
+        diagonal_sum = np.trace(self.data)
+        anitdiagonal_sum = np.trace(self.data[:, ::-1])
+        results.append(diagonal_sum)
+        results.append(anitdiagonal_sum)
 
         for result in results:
             if result == 3:
@@ -84,10 +87,10 @@ class State:
         new_state.data[i, j] = symbol
         return new_state
 
-    # print the board
-    def print_state(self) -> None:
+    def __str__(self):
+        strings = []
         for i in range(BOARD_ROWS):
-            print("-------------")
+            strings.append("-------------")
             out = "| "
             for j in range(BOARD_COLS):
                 if self.data[i, j] == 1:
@@ -97,5 +100,6 @@ class State:
                 else:
                     token = "0"
                 out += token + " | "
-            print(out)
-        print("-------------")
+            strings.append(out)
+        strings.append("-------------")
+        return "\n".join(strings)

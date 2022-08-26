@@ -7,6 +7,7 @@
 # Permission given to modify the code as long as you keep this        #
 # declaration at the top                                              #
 #######################################################################
+import logging
 import pickle
 from typing import Any, Generator
 
@@ -24,6 +25,7 @@ PLAYER1_SYMBOL = 1
 PLAYER2_SYMBOL = -1
 # all possible board configurations
 all_states = get_all_states()
+logging.basicConfig(level=logging.INFO)
 
 
 class Judger:
@@ -51,7 +53,7 @@ class Judger:
         self.player1.set_state(current_state)
         self.player2.set_state(current_state)
         if verbose:
-            current_state.print_state()
+            print(current_state)
         while True:
             player = next(alternator)
             i, j, symbol = player.act()
@@ -63,6 +65,6 @@ class Judger:
             self.player2.set_state(current_state)
 
             if verbose:
-                current_state.print_state()
+                logging.info(current_state)
             if is_end:
                 return current_state.winner

@@ -23,6 +23,9 @@ all_states = get_all_states()
 
 
 class Player:
+    def reset(self):
+        return NotImplemented
+
     def state(self):
         return NotImplemented
 
@@ -130,6 +133,9 @@ class HumanPlayer(Player):
         self.keys = ["q", "w", "e", "a", "s", "d", "z", "x", "c"]
         self.state = None
 
+    def reset(self):
+        pass
+
     def set_state(self, state) -> None:
         self.state = state
 
@@ -137,7 +143,7 @@ class HumanPlayer(Player):
         self.symbol = symbol
 
     def act(self) -> list:
-        self.state.print_state()
+        print(self.state)
         key = input("Input your position:")
         data = self.keys.index(key)
         i = data // BOARD_COLS
