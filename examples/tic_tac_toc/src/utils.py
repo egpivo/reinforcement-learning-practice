@@ -7,6 +7,8 @@
 # Permission given to modify the code as long as you keep this        #
 # declaration at the top                                              #
 #######################################################################
+from collections import defaultdict
+
 from .info import BoardType
 from .state import State
 
@@ -36,3 +38,19 @@ def get_all_states() -> dict:
     all_states[current_state.hash()] = (current_state, current_state.is_end())
     get_all_states_impl(current_state, current_symbol, all_states)
     return all_states
+
+
+class PlayerScore:
+    _player_dict = {1: "player1", -1: "player2", 0: "tie"}
+
+    def __init__(self):
+        self._score = defaultdict(int)
+
+    @property
+    def score(self):
+        return self._score
+
+    @score.setter
+    def score(self, winner: int):
+        player = self._player_dict[winner]
+        self._score[player] += 1

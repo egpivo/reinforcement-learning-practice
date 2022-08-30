@@ -8,6 +8,7 @@
 # declaration at the top                                              #
 #######################################################################
 import logging
+from collections import defaultdict
 
 from src.info import BoardType
 from src.judger import Judger
@@ -19,25 +20,43 @@ BOARD_COLS = BoardType.BOARD_COLS.value
 logging.basicConfig(level=logging.INFO)
 
 
+class PlayerScore:
+    _player_dict = {1: "player1", -1: "player2", 0: "tie"}
+
+    def __init__(self):
+        self._score = defaultdict(int)
+
+    @property
+    def score(self):
+        return self._score
+
+    @score.setter
+    def score(self, winner: int):
+        player = self._player_dict[winner]
+        self._score[player] += 1
+
+
 def train(epochs, print_every_n=500):
     player1 = AgentPlayer(epsilon=0.01)
     player2 = AgentPlayer(epsilon=0.01)
     judger = Judger(player1, player2)
-    player1_win = 0.0
-    player2_win = 0.0
+    score = PlayerScore()
+
     for i in range(1, epochs + 1):
         winner = judger.play(verbose=False)
-        if winner == 1:
-            player1_win += 1
-        if winner == -1:
-            player2_win += 1
+        score.score = winner
+
         if i % print_every_n == 0:
+            player1_score = score.score["player1"]
+            player2_score = score.score["player2"]
             logging.info(
-                f"Epoch {i}, player 1 winrate: {player1_win / i:.02f}, player 2 winrate: {player2_win / i:.02f}"
+                f"Epoch {i}, player 1 winrate: {player1_score / i:.02f}, player 2 winrate: {player2_score / i:.02f}"
             )
+
         player1.backup()
         player2.backup()
         judger.reset()
+
     player1.save_policy()
     player2.save_policy()
 
