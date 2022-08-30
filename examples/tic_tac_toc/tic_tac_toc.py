@@ -8,32 +8,16 @@
 # declaration at the top                                              #
 #######################################################################
 import logging
-from collections import defaultdict
 
 from src.info import BoardType
 from src.judger import Judger
 from src.player import AgentPlayer, HumanPlayer
+from src.utils import PlayerScore
 
 BOARD_ROWS = BoardType.BOARD_ROWS.value
 BOARD_COLS = BoardType.BOARD_COLS.value
 
 logging.basicConfig(level=logging.INFO)
-
-
-class PlayerScore:
-    _player_dict = {1: "player1", -1: "player2", 0: "tie"}
-
-    def __init__(self):
-        self._score = defaultdict(int)
-
-    @property
-    def score(self):
-        return self._score
-
-    @score.setter
-    def score(self, winner: int):
-        player = self._player_dict[winner]
-        self._score[player] += 1
 
 
 def train(epochs, print_every_n=500):
