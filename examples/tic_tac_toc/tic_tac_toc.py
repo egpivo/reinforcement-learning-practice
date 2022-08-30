@@ -51,17 +51,18 @@ def compete(turns: int):
     judger = Judger(player1, player2)
     player1.load_policy()
     player2.load_policy()
-    player1_win = 0.0
-    player2_win = 0.0
+
+    score = PlayerScore()
+
     for _ in range(turns):
         winner = judger.play()
-        if winner == 1:
-            player1_win += 1
-        if winner == -1:
-            player2_win += 1
+        score.score = winner
         judger.reset()
+
+    player1_score = score.score["player1"]
+    player2_score = score.score["player2"]
     logging.info(
-        f"{turns} turns, player 1 win {player1_win / turns:.02f}, player 2 win {player2_win / turns:.02f}"
+        f"{turns} turns, player 1 win {player1_score / turns:.02f}, player 2 win {player2_score / turns:.02f}"
     )
 
 
