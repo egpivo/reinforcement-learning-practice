@@ -36,18 +36,3 @@ def tuplize_enum_values(enum_class: EnumMeta) -> Tuple[Any]:
     if not isinstance(enum_class, EnumMeta):
         raise TypeError(f"The class type is wrong with {type(enum_class)}")
     return tuple(key.value for key in enum_class)
-
-
-class PlayerScore:
-    def __init__(self):
-        self._score = defaultdict(int)
-
-    @property
-    def score(self):
-        return self._score
-
-    @score.setter
-    def score(self, winner: int):
-        if winner not in tuplize_enum_values(SymbolType):
-            raise ValueError(f"Please enter a valid winner symbol - but got {winner}")
-        self._score[winner] += 1

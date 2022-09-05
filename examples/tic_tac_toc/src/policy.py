@@ -3,7 +3,7 @@ import pickle
 
 class PolicyHandler:
     def __init__(self, symbol: int) -> None:
-        self.symbol = 0
+        self.symbol = symbol
 
     def _get_file_name(self) -> str:
         return f"policy_{'first' if self.symbol == 1 else 'second'}.bin"

@@ -1,9 +1,14 @@
+import imp
 import pickle
+from collections import defaultdict
+from enum import EnumMeta
+from typing import Any, Tuple
 
 import numpy as np
-from src import BOARD_COLS, BOARD_ROWS
+from src import BOARD_COLS, BOARD_ROWS, PLAYER1, PLAYER2, TIE
+from src.info import SymbolType
 from src.state import State
-from src.utils import get_all_states
+from src.utils import get_all_states, tuplize_enum_values
 
 all_states = get_all_states()
 
@@ -127,3 +132,18 @@ class HumanPlayer(Player):
         j = data % BOARD_COLS
         action = [i, j, self.symbol]
         return action
+
+
+class PlayerScore:
+    def __init__(self):
+        self._score = defaultdict(int)
+
+    @property
+    def score(self):
+        return self._score
+
+    @score.setter
+    def score(self, winner: int):
+        if winner not in tuplize_enum_values(SymbolType):
+            raise ValueError(f"Please enter a valid winner symbol - but got {winner}")
+        self._score[winner] += 1
