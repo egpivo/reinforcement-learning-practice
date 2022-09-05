@@ -9,12 +9,10 @@
 #######################################################################
 import logging
 
-from src import BOARD_COLS, BOARD_ROWS, PLAYER1, PLAYER2
-from src.info import BoardType
+from src import PLAYER1, PLAYER2
 from src.judger import Judger
-from src.player import AgentPlayer, HumanPlayer
+from src.player import AgentPlayer, HumanPlayer, PlayerScore
 from src.policy import PolicyFileHandler
-from src.utils import PlayerScore
 
 logging.basicConfig(level=logging.INFO)
 
@@ -29,7 +27,7 @@ def train(epoch: int, verbose: bool = True, print_every_n: int = 500) -> None:
         winner = judger.play(verbose=False)
         score.score = winner
 
-        if i % print_every_n == 0:
+        if verbose and i % print_every_n == 0:
             logging.info(
                 f"[Winrate] Epoch {i}:\n Player 1: {score.score[PLAYER1] / i:.02f} \n Player 2: {score.score[PLAYER2] / i:.02f}"
             )

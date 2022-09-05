@@ -1,10 +1,7 @@
 import logging
-import pickle
 from typing import Any, Generator
 
-import numpy as np
-from src import BOARD_COLS, BOARD_ROWS, PLAYER1, PLAYER2
-from src.info import BoardType
+from src import PLAYER1, PLAYER2
 from src.player import Player
 from src.state import State
 from src.utils import get_all_states

@@ -1,10 +1,7 @@
-import imp
-from collections import defaultdict
 from enum import EnumMeta
 from typing import Any, Tuple
 
-from src import BOARD_COLS, BOARD_ROWS, PLAYER1, PLAYER2, TIE
-from src.info import SymbolType
+from src import BOARD_COLS, BOARD_ROWS
 from src.state import State
 
 
