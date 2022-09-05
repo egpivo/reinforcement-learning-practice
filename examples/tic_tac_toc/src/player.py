@@ -1,23 +1,9 @@
-#######################################################################
-# Copyright (C)                                                       #
-# 2016 - 2018 Shangtong Zhang(zhangshangtong.cpp@gmail.com)           #
-# 2016 Jan Hakenberg(jan.hakenberg@gmail.com)                         #
-# 2016 Tian Jun(tianjun.cpp@gmail.com)                                #
-# 2016 Kenta Shimada(hyperkentakun@gmail.com)                         #
-# Permission given to modify the code as long as you keep this        #
-# declaration at the top                                              #
-#######################################################################
 import pickle
 
 import numpy as np
-
-from .info import BoardType
-from .state import State
-from .utils import get_all_states
-
-BOARD_ROWS = BoardType.BOARD_ROWS.value
-BOARD_COLS = BoardType.BOARD_COLS.value
-
+from src import BOARD_COLS, BOARD_ROWS
+from src.state import State
+from src.utils import get_all_states
 
 all_states = get_all_states()
 
@@ -37,8 +23,10 @@ class Player:
 
 
 class AgentPlayer(Player):
-    def __init__(self, step_size: float = 0.1, epsilon: float = 0.1) -> None:
-        self.estimations = dict()
+    def __init__(
+        self, step_size: float = 0.1, epsilon: float = 0.1, estimations={}
+    ) -> None:
+        self.estimations = estimations
         self.step_size = step_size
         self.epsilon = epsilon
         self.states = []
@@ -105,17 +93,6 @@ class AgentPlayer(Player):
         action = values[0][1]
         action.append(self.symbol)
         return action
-
-    def _get_file_name(self) -> str:
-        return f"policy_{'first' if self.symbol == 1 else 'second'}.bin"
-
-    def save_policy(self) -> None:
-        with open(self._get_file_name(), "wb") as f:
-            pickle.dump(self.estimations, f)
-
-    def load_policy(self) -> None:
-        with open(self._get_file_name(), "rb") as f:
-            self.estimations = pickle.load(f)
 
 
 class HumanPlayer(Player):
