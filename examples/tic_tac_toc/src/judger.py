@@ -1,28 +1,14 @@
-#######################################################################
-# Copyright (C)                                                       #
-# 2016 - 2018 Shangtong Zhang(zhangshangtong.cpp@gmail.com)           #
-# 2016 Jan Hakenberg(jan.hakenberg@gmail.com)                         #
-# 2016 Tian Jun(tianjun.cpp@gmail.com)                                #
-# 2016 Kenta Shimada(hyperkentakun@gmail.com)                         #
-# Permission given to modify the code as long as you keep this        #
-# declaration at the top                                              #
-#######################################################################
 import logging
 import pickle
 from typing import Any, Generator
 
 import numpy as np
+from src import BOARD_COLS, BOARD_ROWS, PLAYER1, PLAYER2
+from src.info import BoardType
+from src.player import Player
+from src.state import State
+from src.utils import get_all_states
 
-from .info import BoardType
-from .player import Player
-from .state import State
-from .utils import get_all_states
-
-BOARD_ROWS = BoardType.BOARD_ROWS.value
-BOARD_COLS = BoardType.BOARD_COLS.value
-
-PLAYER1_SYMBOL = 1
-PLAYER2_SYMBOL = -1
 # all possible board configurations
 all_states = get_all_states()
 logging.basicConfig(level=logging.INFO)
@@ -33,8 +19,8 @@ class Judger:
         self.player1 = player1
         self.player2 = player2
 
-        self.player1.set_symbol(PLAYER1_SYMBOL)
-        self.player2.set_symbol(PLAYER2_SYMBOL)
+        self.player1.set_symbol(PLAYER1)
+        self.player2.set_symbol(PLAYER2)
         self.current_state = State()
 
     def reset(self) -> None:

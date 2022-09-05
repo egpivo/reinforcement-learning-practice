@@ -1,19 +1,11 @@
-#######################################################################
-# Copyright (C)                                                       #
-# 2016 - 2018 Shangtong Zhang(zhangshangtong.cpp@gmail.com)           #
-# 2016 Jan Hakenberg(jan.hakenberg@gmail.com)                         #
-# 2016 Tian Jun(tianjun.cpp@gmail.com)                                #
-# 2016 Kenta Shimada(hyperkentakun@gmail.com)                         #
-# Permission given to modify the code as long as you keep this        #
-# declaration at the top                                              #
-#######################################################################
+import imp
 from collections import defaultdict
+from enum import EnumMeta
+from typing import Any, Tuple
 
-from .info import BoardType
-from .state import State
-
-BOARD_ROWS = BoardType.BOARD_ROWS.value
-BOARD_COLS = BoardType.BOARD_COLS.value
+from src import BOARD_COLS, BOARD_ROWS, PLAYER1, PLAYER2, TIE
+from src.info import SymbolType
+from src.state import State
 
 
 def get_all_states_impl(
@@ -40,9 +32,13 @@ def get_all_states() -> dict:
     return all_states
 
 
-class PlayerScore:
-    _player_dict = {1: "player1", -1: "player2", 0: "tie"}
+def tuplize_enum_values(enum_class: EnumMeta) -> Tuple[Any]:
+    if not isinstance(enum_class, EnumMeta):
+        raise TypeError(f"The class type is wrong with {type(enum_class)}")
+    return tuple(key.value for key in enum_class)
 
+
+class PlayerScore:
     def __init__(self):
         self._score = defaultdict(int)
 
@@ -52,5 +48,6 @@ class PlayerScore:
 
     @score.setter
     def score(self, winner: int):
-        player = self._player_dict[winner]
-        self._score[player] += 1
+        if winner not in tuplize_enum_values(SymbolType):
+            raise ValueError(f"Please enter a valid winner symbol - but got {winner}")
+        self._score[winner] += 1

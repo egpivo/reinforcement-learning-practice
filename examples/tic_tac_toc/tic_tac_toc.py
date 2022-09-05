@@ -9,82 +9,79 @@
 #######################################################################
 import logging
 
+from src import BOARD_COLS, BOARD_ROWS, PLAYER1, PLAYER2
 from src.info import BoardType
 from src.judger import Judger
 from src.player import AgentPlayer, HumanPlayer
+from src.policy_handler import PolicyHandler
 from src.utils import PlayerScore
-
-BOARD_ROWS = BoardType.BOARD_ROWS.value
-BOARD_COLS = BoardType.BOARD_COLS.value
 
 logging.basicConfig(level=logging.INFO)
 
 
-def train(epochs, print_every_n=500):
+def train(epoch: int, verbose: bool = True, print_every_n: int = 500) -> None:
     player1 = AgentPlayer(epsilon=0.01)
     player2 = AgentPlayer(epsilon=0.01)
     judger = Judger(player1, player2)
     score = PlayerScore()
 
-    for i in range(1, epochs + 1):
+    for i in range(1, epoch + 1):
         winner = judger.play(verbose=False)
         score.score = winner
 
         if i % print_every_n == 0:
-            player1_score = score.score["player1"]
-            player2_score = score.score["player2"]
             logging.info(
-                f"Epoch {i}, player 1 winrate: {player1_score / i:.02f}, player 2 winrate: {player2_score / i:.02f}"
+                f"[Winrate] Epoch {i}:\n Player 1: {score.score[PLAYER1] / i:.02f} \n Player 2: {score.score[PLAYER2] / i:.02f}"
             )
 
         player1.backup()
         player2.backup()
         judger.reset()
 
-    player1.save_policy()
-    player2.save_policy()
+    PolicyHandler(PLAYER1).save(player1.estimations)
+    PolicyHandler(PLAYER2).save(player2.estimations)
 
 
-def compete(turns: int):
-    player1 = AgentPlayer(epsilon=0)
-    player2 = AgentPlayer(epsilon=0)
+def compete(round: int) -> None:
+    player1 = AgentPlayer(epsilon=0, estimations=PolicyHandler(PLAYER1).load())
+    player2 = AgentPlayer(epsilon=0, estimations=PolicyHandler(PLAYER2).load())
     judger = Judger(player1, player2)
-    player1.load_policy()
-    player2.load_policy()
 
     score = PlayerScore()
 
-    for _ in range(turns):
+    for _ in range(round):
         winner = judger.play()
         score.score = winner
         judger.reset()
 
-    player1_score = score.score["player1"]
-    player2_score = score.score["player2"]
+    player1_score = score.score[PLAYER1]
+    player2_score = score.score[PLAYER2]
     logging.info(
-        f"{turns} turns, player 1 win {player1_score / turns:.02f}, player 2 win {player2_score / turns:.02f}"
+        f"{round} Round Average Winrate \n player 1: {player1_score / round:.02f}\n player 2: {player2_score / round:.02f}"
     )
 
 
-# The game is a zero sum game. If both players are playing with an optimal strategy, every game will end in a tie.
-# So we test whether the AI can guarantee at least a tie if it goes second.
-def play():
+def play() -> None:
+    """
+    Notes
+    -----
+    - Zero sum game. That is, the game will end up a tie when both go with an optimual strategy
+    """
     while True:
         player1 = HumanPlayer()
-        player2 = AgentPlayer(epsilon=0)
+        player2 = AgentPlayer(epsilon=0, estimations=PolicyHandler(PLAYER2).load())
         judger = Judger(player1, player2)
-        player2.load_policy()
         winner = judger.play()
-        if winner == player2.symbol:
+        if winner == PLAYER2:
             logging.info("You lose!")
-        elif winner == player1.symbol:
+        elif winner == PLAYER1:
             logging.info("You win!")
         else:
             logging.info("It is a tie!")
 
 
 if __name__ == "__main__":
-    train(int(1e5))
+    train(int(1e4))
     compete(int(1e3))
 
     play()
