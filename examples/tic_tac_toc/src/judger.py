@@ -16,8 +16,8 @@ class Judger:
         self.player1 = player1
         self.player2 = player2
 
-        self.player1.set_symbol(PLAYER1)
-        self.player2.set_symbol(PLAYER2)
+        self.player1.symbol = PLAYER1
+        self.player2.symbol = PLAYER2
         self.current_state = State()
 
     def reset(self) -> None:
@@ -36,7 +36,7 @@ class Judger:
         self.player1.set_state(current_state)
         self.player2.set_state(current_state)
         if verbose:
-            print(current_state)
+            logging.info(current_state)
         while True:
             player = next(alternator)
             i, j, symbol = player.act()

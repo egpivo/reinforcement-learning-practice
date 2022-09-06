@@ -1,7 +1,7 @@
 from collections import defaultdict
 
 import numpy as np
-from src import BOARD_COLS, BOARD_ROWS
+from src import BOARD_COLS, BOARD_ROWS, TIE
 from src.info import SymbolType
 from src.utils import get_all_states, tuplize_enum_values
 
@@ -15,7 +15,8 @@ class Player:
     def state(self):
         return NotImplemented
 
-    def set_symbol(self):
+    @property
+    def symbol(self) -> None:
         return NotImplemented
 
     def act(self):
@@ -31,7 +32,7 @@ class AgentPlayer(Player):
         self.epsilon = epsilon
         self.states = []
         self.greedy = []
-        self.symbol = 0
+        self._symbol = 0
 
     def reset(self) -> None:
         self.states = []
@@ -41,20 +42,29 @@ class AgentPlayer(Player):
         self.states.append(state)
         self.greedy.append(True)
 
-    def set_symbol(self, symbol: int) -> None:
-        self.symbol = symbol
+    @property
+    def symbol(self) -> None:
+        return self._symbol
+
+    @symbol.setter
+    def symbol(self, symbol: int) -> None:
+        self._symbol = symbol
+        self._update_estimates()
+
+    def _update_estimates(self) -> None:
         for hash_val in all_states:
             state, is_end = all_states[hash_val]
-            if is_end:
-                if state.winner == self.symbol:
-                    self.estimations[hash_val] = 1.0
-                elif state.winner == 0:
-                    # we need to distinguish between a tie and a lose
-                    self.estimations[hash_val] = 0.5
-                else:
-                    self.estimations[hash_val] = 0
-            else:
-                self.estimations[hash_val] = 0.5
+            self.estimations[hash_val] = self._score(state.winner, is_end)
+
+    def _score(self, winner: int, is_end: bool) -> float:
+        if not is_end:
+            return 0.5
+        if winner == self.symbol:
+            return 1.0
+        elif winner == TIE:
+            return 0.5
+        else:
+            return 0
 
     # update value estimation
     def backup(self) -> None:
@@ -85,8 +95,8 @@ class AgentPlayer(Player):
             return action
 
         values = []
-        for hash_val, pos in zip(next_states, next_positions):
-            values.append((self.estimations[hash_val], pos))
+        for hash_val, position in zip(next_states, next_positions):
+            values.append((self.estimations[hash_val], position))
         # to select one of the actions of equal value at random due to Python's sort is stable
         np.random.shuffle(values)
         values.sort(key=lambda x: x[0], reverse=True)
@@ -99,25 +109,30 @@ class HumanPlayer(Player):
     """
     Notes
     -----
-    - human interface - input a number to put a chessman
+    - Human interface - input a number to put a chessman
         | q | w | e |
         | a | s | d |
         | z | x | c |
     """
 
     def __init__(self) -> None:
-        self.symbol = None
         self.keys = ["q", "w", "e", "a", "s", "d", "z", "x", "c"]
-        self.state = None
+        self._state = None
+        self._symbol = None
 
     def reset(self):
         pass
 
-    def set_state(self, state) -> None:
+    def set_state(self, state: int) -> None:
         self.state = state
 
-    def set_symbol(self, symbol) -> None:
-        self.symbol = symbol
+    @property
+    def symbol(self) -> None:
+        return self._symbol
+
+    @symbol.setter
+    def symbol(self, symbol: int) -> None:
+        self._symbol = symbol
 
     def act(self) -> list:
         print(self.state)
