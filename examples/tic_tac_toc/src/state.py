@@ -36,19 +36,10 @@ class State:
           - 0: empty
     """
 
-    def __init__(self) -> None:
-        self.data = np.zeros((BOARD_ROWS, BOARD_COLS))
+    def __init__(self, data: np.ndarray = np.zeros((BOARD_ROWS, BOARD_COLS))) -> None:
+        self.data = data
         self.winner = None
-        self.hash_val = None
         self._is_end = None
-
-    def hash(self) -> int:
-        """Note: Hash(X) = \sum_{i}f(i); f(i) = 3f(i-1) + X(i) + 1"""
-        if self.hash_val is None:
-            self.hash_val = 0
-            for i in np.nditer(self.data):
-                self.hash_val = self.hash_val * 3 + i + 1
-        return self.hash_val
 
     @property
     def is_end(self) -> bool:
@@ -56,12 +47,6 @@ class State:
             self.winner = set_winner(self.data)
             self._is_end = self.winner is not None
         return self._is_end
-
-    def next_state(self, i, j, symbol):
-        new_state = State()
-        new_state.data = np.copy(self.data)
-        new_state.data[i, j] = symbol
-        return new_state
 
     def __str__(self):
         strings = []

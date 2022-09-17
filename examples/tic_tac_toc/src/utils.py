@@ -7,13 +7,28 @@ from src import BOARD_COLS, BOARD_ROWS, BOARD_SIZE, PLAYER1, PLAYER2, TIE
 from src.state import State
 
 
+def create_next_state(data, i, j, symbol) -> State:
+    new_state = State(np.copy(data))
+    new_state.data[i, j] = symbol
+    return new_state
+
+
+def hash(data) -> int:
+    """Note: Hash(X) = \sum_{i}f(i); f(i) = 3f(i-1) + X(i) + 1"""
+    hash_val = 0
+    for i in np.nditer(data):
+        hash_val = hash_val * 3 + i + 1
+    return hash_val
+
+
 def get_all_states_impl(
     current_state: State, current_symbol: int, all_states: dict
 ) -> None:
     for i, j in product(range(BOARD_ROWS), range(BOARD_COLS)):
         if current_state.data[i][j] == 0:
-            new_state = current_state.next_state(i, j, current_symbol)
-            new_hash = new_state.hash()
+
+            new_state = create_next_state(current_state.data, i, j, current_symbol)
+            new_hash = hash(new_state.data)
 
             if new_hash not in all_states:
                 all_states[new_hash] = (new_state, new_state.is_end)

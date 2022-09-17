@@ -4,7 +4,7 @@ from typing import Any, Generator
 from src import PLAYER1, PLAYER2
 from src.player import Player
 from src.state import State
-from src.utils import get_all_states
+from src.utils import create_next_state, get_all_states, hash
 
 # all possible board configurations
 all_states = get_all_states()
@@ -41,7 +41,8 @@ class Judger:
             player = next(alternator)
             i, j, symbol = player.act()
 
-            next_state_hash = current_state.next_state(i, j, symbol).hash()
+            next_state = create_next_state(current_state.data, i, j, symbol)
+            next_state_hash = hash(next_state.data)
             current_state, is_end = all_states[next_state_hash]
 
             self.player1.set_state(current_state)

@@ -3,7 +3,7 @@ from collections import defaultdict
 import numpy as np
 from src import BOARD_COLS, BOARD_ROWS, TIE
 from src.info import SymbolType
-from src.utils import get_all_states, tuplize_enum_values
+from src.utils import create_next_state, get_all_states, hash, tuplize_enum_values
 
 all_states = get_all_states()
 
@@ -68,7 +68,7 @@ class AgentPlayer(Player):
 
     # update value estimation
     def backup(self) -> None:
-        states = [state.hash() for state in self.states]
+        states = [hash(state.data) for state in self.states]
 
         for i in reversed(range(len(states) - 1)):
             state = states[i]
@@ -86,7 +86,9 @@ class AgentPlayer(Player):
             for j in range(BOARD_COLS):
                 if state.data[i, j] == 0:
                     next_positions.append([i, j])
-                    next_states.append(state.next_state(i, j, self.symbol).hash())
+                    next_state = create_next_state(state.data, i, j, self.symbol)
+                    next_hash = hash(next_state.data)
+                    next_states.append(next_hash)
 
         if np.random.rand() < self.epsilon:
             action = next_positions[np.random.randint(len(next_positions))]
