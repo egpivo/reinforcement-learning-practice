@@ -3,9 +3,11 @@ from collections import defaultdict
 import numpy as np
 from src import BOARD_COLS, BOARD_ROWS, TIE
 from src.info import SymbolType
-from src.utils import create_next_state, get_all_states, hash, tuplize_enum_values
+from src.state_generator import StateGenerator
+from src.utils import create_next_state, hash, tuplize_enum_values
 
-all_states = get_all_states()
+# all possible board configurations
+all_states = StateGenerator().generate()
 
 
 class Player:

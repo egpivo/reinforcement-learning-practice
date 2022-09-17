@@ -4,10 +4,11 @@ from typing import Any, Generator
 from src import PLAYER1, PLAYER2
 from src.player import Player
 from src.state import State
-from src.utils import create_next_state, get_all_states, hash
+from src.state_generator import StateGenerator
+from src.utils import create_next_state, hash
 
 # all possible board configurations
-all_states = get_all_states()
+all_states = StateGenerator().generate()
 logging.basicConfig(level=logging.INFO)
 
 
