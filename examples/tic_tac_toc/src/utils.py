@@ -1,9 +1,7 @@
 from enum import EnumMeta
-from itertools import product
 from typing import Any, Tuple
 
 import numpy as np
-from src import BOARD_COLS, BOARD_ROWS, BOARD_SIZE, PLAYER1, PLAYER2, TIE
 from src.state import State
 
 

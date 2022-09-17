@@ -1,24 +1,25 @@
+from collections import defaultdict
 from itertools import product
 
 import numpy as np
-from src import BOARD_COLS, BOARD_ROWS, BOARD_SIZE, PLAYER1, PLAYER2, TIE
+from src import BOARD_COLS, BOARD_ROWS, PLAYER1
 from src.state import State
 from src.utils import create_next_state, hash
 
 
 class StateGenerator:
-    _init_symbol = 1
+    _init_symbol = PLAYER1
     _init_state = State()
 
     def _initialize_states(self) -> dict:
-        states = dict()
+        states = defaultdict(int)
         states[hash(self._init_state.data)] = (
             self._init_state,
             self._init_state.is_end,
         )
         return states
 
-    def _traverse_states(self, data: dict, symbol: int, all_states: dict) -> None:
+    def _traverse_states(self, data: np.array, symbol: int, all_states: dict) -> None:
         for i, j in product(range(BOARD_ROWS), range(BOARD_COLS)):
             if data[i][j] == 0:
 

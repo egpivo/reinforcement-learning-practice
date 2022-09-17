@@ -29,7 +29,10 @@ def train(epoch: int, verbose: bool = True, print_every_n: int = 500) -> None:
 
         if verbose and i % print_every_n == 0:
             logging.info(
-                f"[Winrate] Epoch {i}:\n Player 1: {score.score[PLAYER1] / i:.03f} \n Player 2: {score.score[PLAYER2] / i:.03f}"
+                (
+                    f"[Winrate] Epoch {i}:\n Player 1: {score.score[PLAYER1] / i:.03f}",
+                    f"Player 2: {score.score[PLAYER2] / i:.03f}",
+                )
             )
 
         player1.backup()
@@ -55,7 +58,10 @@ def compete(round: int) -> None:
     player1_score = score.score[PLAYER1]
     player2_score = score.score[PLAYER2]
     logging.info(
-        f"{round} Round Average Winrate \n player 1: {player1_score / round:.02f}\n player 2: {player2_score / round:.02f}"
+        (
+            f"{round} Round Average Winrate \n player 1: {player1_score / round:.02f}",
+            f"player 2: {player2_score / round:.02f}",
+        )
     )
 
 
