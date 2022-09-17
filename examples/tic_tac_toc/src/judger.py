@@ -30,7 +30,7 @@ class Judger:
             yield self.player1
             yield self.player2
 
-    def play(self, verbose=False) -> Any:
+    def play(self, verbose: bool = False) -> Any:
         alternator = self.alternate()
         self.reset()
         current_state = State()

@@ -48,7 +48,7 @@ class State:
             self._is_end = self.winner is not None
         return self._is_end
 
-    def __str__(self):
+    def __str__(self) -> None:
         strings = []
         for i in range(BOARD_ROWS):
             strings.append("-------------")

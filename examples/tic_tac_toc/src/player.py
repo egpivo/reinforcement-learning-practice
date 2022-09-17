@@ -11,23 +11,23 @@ all_states = StateGenerator().generate()
 
 
 class Player:
-    def reset(self):
+    def reset(self) -> None:
         return NotImplemented
 
-    def state(self):
+    def state(self) -> None:
         return NotImplemented
 
     @property
     def symbol(self) -> None:
         return NotImplemented
 
-    def act(self):
+    def act(self) -> None:
         return NotImplemented
 
 
 class AgentPlayer(Player):
     def __init__(
-        self, step_size: float = 0.1, epsilon: float = 0.1, estimations={}
+        self, step_size: float = 0.1, epsilon: float = 0.1, estimations: dict = {}
     ) -> None:
         self.estimations = estimations
         self.step_size = step_size
@@ -124,7 +124,7 @@ class HumanPlayer(Player):
         self._state = None
         self._symbol = None
 
-    def reset(self):
+    def reset(self) -> None:
         pass
 
     def set_state(self, state: int) -> None:
@@ -149,15 +149,15 @@ class HumanPlayer(Player):
 
 
 class PlayerScore:
-    def __init__(self):
+    def __init__(self) -> None:
         self._score = defaultdict(int)
 
     @property
-    def score(self):
+    def score(self) -> None:
         return self._score
 
     @score.setter
-    def score(self, winner: int):
+    def score(self, winner: int) -> None:
         if winner not in tuplize_enum_values(SymbolType):
             raise ValueError(f"Please enter a valid winner symbol - but got {winner}")
         self._score[winner] += 1

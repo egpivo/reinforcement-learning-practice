@@ -5,7 +5,7 @@ import numpy as np
 from src.state import State
 
 
-def create_next_state(data, i, j, symbol) -> State:
+def create_next_state(data: np.array, i: int, j: int, symbol: int) -> State:
     new_state = State(np.copy(data))
     new_state.data[i, j] = symbol
     return new_state
