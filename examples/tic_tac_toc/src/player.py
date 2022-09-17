@@ -3,7 +3,6 @@ from collections import defaultdict
 import numpy as np
 from src import BOARD_COLS, BOARD_ROWS, TIE
 from src.info import SymbolType
-from src.state_generator import StateGenerator
 from src.utils import create_next_state, hash, tuplize_enum_values
 
 

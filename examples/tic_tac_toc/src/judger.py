@@ -4,7 +4,6 @@ from typing import Any, Generator
 from src import PLAYER1, PLAYER2
 from src.player import Player
 from src.state import State
-from src.state_generator import StateGenerator
 from src.utils import create_next_state, hash
 
 logging.basicConfig(level=logging.INFO)
