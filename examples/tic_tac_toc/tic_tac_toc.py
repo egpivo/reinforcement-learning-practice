@@ -13,24 +13,26 @@ from src import PLAYER1, PLAYER2
 from src.judger import Judger
 from src.player import AgentPlayer, HumanPlayer, PlayerScore
 from src.policy import PolicyFileHandler
+from src.state_generator import StateGenerator
 
 logging.basicConfig(level=logging.INFO)
+ALL_STATES = StateGenerator().generate()
 
 
 def train(epoch: int, verbose: bool = True, print_every_n: int = 500) -> None:
-    player1 = AgentPlayer(epsilon=0.01)
-    player2 = AgentPlayer(epsilon=0.01)
+    player1 = AgentPlayer(ALL_STATES, epsilon=0.01)
+    player2 = AgentPlayer(ALL_STATES, epsilon=0.01)
     judger = Judger(player1, player2)
     score = PlayerScore()
 
     for i in range(1, epoch + 1):
-        winner = judger.play(verbose=False)
+        winner = judger.play(ALL_STATES, verbose=False)
         score.score = winner
 
         if verbose and i % print_every_n == 0:
             logging.info(
                 (
-                    f"[Winrate] Epoch {i}:\n Player 1: {score.score[PLAYER1] / i:.03f}",
+                    f"[Winrate] Epoch {i}: Player 1: {score.score[PLAYER1] / i:.03f}",
                     f"Player 2: {score.score[PLAYER2] / i:.03f}",
                 )
             )
@@ -44,14 +46,18 @@ def train(epoch: int, verbose: bool = True, print_every_n: int = 500) -> None:
 
 
 def compete(round: int) -> None:
-    player1 = AgentPlayer(epsilon=0, estimations=PolicyFileHandler(PLAYER1).load())
-    player2 = AgentPlayer(epsilon=0, estimations=PolicyFileHandler(PLAYER2).load())
+    player1 = AgentPlayer(
+        ALL_STATES, epsilon=0, estimations=PolicyFileHandler(PLAYER1).load()
+    )
+    player2 = AgentPlayer(
+        ALL_STATES, epsilon=0, estimations=PolicyFileHandler(PLAYER2).load()
+    )
     judger = Judger(player1, player2)
 
     score = PlayerScore()
 
     for _ in range(round):
-        winner = judger.play()
+        winner = judger.play(ALL_STATES)
         score.score = winner
         judger.reset()
 
@@ -59,7 +65,7 @@ def compete(round: int) -> None:
     player2_score = score.score[PLAYER2]
     logging.info(
         (
-            f"{round} Round Average Winrate \n player 1: {player1_score / round:.02f}",
+            f"{round} Round Average WinratePolicyFileHandler(PLAYER2).load() player 1: {player1_score / round:.02f}",
             f"player 2: {player2_score / round:.02f}",
         )
     )
@@ -73,9 +79,11 @@ def play() -> None:
     """
     while True:
         player1 = HumanPlayer()
-        player2 = AgentPlayer(epsilon=0, estimations=PolicyFileHandler(PLAYER2).load())
+        player2 = AgentPlayer(
+            ALL_STATES, epsilon=0, estimations=PolicyFileHandler(PLAYER2).load()
+        )
         judger = Judger(player1, player2)
-        winner = judger.play()
+        winner = judger.play(ALL_STATES)
         if winner == PLAYER2:
             logging.info("You lose!")
         elif winner == PLAYER1:

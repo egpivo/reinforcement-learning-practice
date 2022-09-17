@@ -6,9 +6,6 @@ from src.info import SymbolType
 from src.state_generator import StateGenerator
 from src.utils import create_next_state, hash, tuplize_enum_values
 
-# all possible board configurations
-all_states = StateGenerator().generate()
-
 
 class Player:
     def reset(self) -> None:
@@ -27,8 +24,13 @@ class Player:
 
 class AgentPlayer(Player):
     def __init__(
-        self, step_size: float = 0.1, epsilon: float = 0.1, estimations: dict = {}
+        self,
+        all_states: dict,
+        step_size: float = 0.1,
+        epsilon: float = 0.1,
+        estimations: dict = {},
     ) -> None:
+        self.all_states = all_states
         self.estimations = estimations
         self.step_size = step_size
         self.epsilon = epsilon
@@ -54,8 +56,8 @@ class AgentPlayer(Player):
         self._update_estimates()
 
     def _update_estimates(self) -> None:
-        for hash_val in all_states:
-            state, is_end = all_states[hash_val]
+        for hash_val in self.all_states:
+            state, is_end = self.all_states[hash_val]
             self.estimations[hash_val] = self._score(state.winner, is_end)
 
     def _score(self, winner: int, is_end: bool) -> float:

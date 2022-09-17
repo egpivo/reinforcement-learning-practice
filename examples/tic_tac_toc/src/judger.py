@@ -7,8 +7,6 @@ from src.state import State
 from src.state_generator import StateGenerator
 from src.utils import create_next_state, hash
 
-# all possible board configurations
-all_states = StateGenerator().generate()
 logging.basicConfig(level=logging.INFO)
 
 
@@ -30,7 +28,7 @@ class Judger:
             yield self.player1
             yield self.player2
 
-    def play(self, verbose: bool = False) -> Any:
+    def play(self, all_states: dict, verbose: bool = False) -> Any:
         alternator = self.alternate()
         self.reset()
         current_state = State()
