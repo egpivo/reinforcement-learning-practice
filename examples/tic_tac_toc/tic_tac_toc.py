@@ -41,8 +41,8 @@ def train(
                     f"Player 2: {score.score[PLAYER2] / i:.03f}",
                 )
             )
-        player1.state_value.backup()
-        player2.state_value.backup()
+        player1.state_value.estimate()
+        player2.state_value.estimate()
         judger.reset()
 
     PolicyFileHandler(PLAYER1).save(player1.state_value.state_values)

@@ -5,8 +5,8 @@ import numpy as np
 from src import BOARD_COLS, BOARD_ROWS, DRAW
 from src.info import RewardType, SymbolType
 from src.state import State
-from src.state_value import ValueFunction
 from src.utils import create_next_state, hash, tuplize_enum_values
+from src.value_estimator import ValueEstimator
 
 
 class Player:
@@ -32,7 +32,7 @@ class AgentPlayer(Player):
     ) -> None:
         self.all_states = all_states
         self.epsilon = epsilon
-        self.state_value = ValueFunction(step_size, state_values)
+        self.state_value = ValueEstimator(step_size, state_values)
         self._symbol = 0
 
     def reset(self) -> None:

@@ -2,7 +2,7 @@ from src.state import State
 from src.utils import hash
 
 
-class ValueFunction:
+class ValueEstimator:
     def __init__(self, step_size: int, state_values: dict) -> None:
         self._step_size = step_size
         self._state_values = state_values
@@ -31,7 +31,8 @@ class ValueFunction:
     def greedy(self, greedy: list) -> None:
         self._greedy = greedy
 
-    def backup(self) -> None:
+    def estimate(self) -> None:
+        """Note: back up the value of the state after each greedy move"""
         states = [hash(state.data) for state in self.states]
         for t, current_state in reversed(list(enumerate(states[:-1]))):
             next_state = states[t + 1]
