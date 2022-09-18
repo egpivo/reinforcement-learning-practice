@@ -10,9 +10,9 @@ class PolicyFileHandler:
     def _get_file_name(self) -> str:
         return f"policy_{'first' if self.symbol == PLAYER1 else 'second'}.bin"
 
-    def save(self, estimations: dict) -> None:
+    def save(self, state_values: dict) -> None:
         with open(self._get_file_name(), "wb") as f:
-            pickle.dump(estimations, f)
+            pickle.dump(state_values, f)
 
     def load(self) -> dict:
         with open(self._get_file_name(), "rb") as f:

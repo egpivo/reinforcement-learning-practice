@@ -6,4 +6,4 @@ BOARD_SIZE = BoardType.BOARD_SIZE.value
 
 PLAYER1 = SymbolType.PLAYER1.value
 PLAYER2 = SymbolType.PLAYER2.value
-TIE = SymbolType.TIE.value
+DRAW = SymbolType.DRAW.value

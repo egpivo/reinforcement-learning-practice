@@ -10,4 +10,11 @@ class BoardType(Enum):
 class SymbolType(Enum):
     PLAYER1 = 1
     PLAYER2 = -1
-    TIE = 0
+    DRAW = 0
+
+
+class RewardType(Enum):
+    WINNING = 1
+    DRAW = 0.5
+    IN_GAME = 0.5
+    LOSS = 0

@@ -1,5 +1,5 @@
 import numpy as np
-from src import BOARD_COLS, BOARD_ROWS, BOARD_SIZE, PLAYER1, PLAYER2, TIE
+from src import BOARD_COLS, BOARD_ROWS, BOARD_SIZE, DRAW, PLAYER1, PLAYER2
 
 
 def summarize_game(data: dict) -> list:
@@ -21,7 +21,7 @@ def set_winner(data: dict) -> int:
         if abs(result) == 3:
             return PLAYER1 if result > 0 else PLAYER2
     if np.sum(np.abs(data)) == BOARD_SIZE:
-        return TIE
+        return DRAW
 
 
 class State:

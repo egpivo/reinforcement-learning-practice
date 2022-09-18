@@ -19,10 +19,14 @@ logging.basicConfig(level=logging.INFO)
 
 
 def train(
-    epoch: int, all_states: dict, verbose: bool = True, print_every_n: int = 500
+    epoch: int,
+    all_states: dict,
+    verbose: bool = True,
+    print_every_n: int = 500,
+    epsilon: float = 0.01,
 ) -> None:
-    player1 = AgentPlayer(all_states, epsilon=0.01)
-    player2 = AgentPlayer(all_states, epsilon=0.01)
+    player1 = AgentPlayer(all_states, epsilon=epsilon)
+    player2 = AgentPlayer(all_states, epsilon=epsilon)
     judger = Judger(player1, player2)
     score = PlayerScore()
 
@@ -37,21 +41,20 @@ def train(
                     f"Player 2: {score.score[PLAYER2] / i:.03f}",
                 )
             )
-
-        player1.backup()
-        player2.backup()
+        player1.state_value.backup()
+        player2.state_value.backup()
         judger.reset()
 
-    PolicyFileHandler(PLAYER1).save(player1.estimations)
-    PolicyFileHandler(PLAYER2).save(player2.estimations)
+    PolicyFileHandler(PLAYER1).save(player1.state_value.state_values)
+    PolicyFileHandler(PLAYER2).save(player2.state_value.state_values)
 
 
 def compete(round: int, all_states: dict) -> None:
     player1 = AgentPlayer(
-        all_states, epsilon=0, estimations=PolicyFileHandler(PLAYER1).load()
+        all_states, epsilon=0, state_values=PolicyFileHandler(PLAYER1).load()
     )
     player2 = AgentPlayer(
-        all_states, epsilon=0, estimations=PolicyFileHandler(PLAYER2).load()
+        all_states, epsilon=0, state_values=PolicyFileHandler(PLAYER2).load()
     )
     judger = Judger(player1, player2)
 
@@ -81,7 +84,7 @@ def play(all_states: dict) -> None:
     while True:
         player1 = HumanPlayer()
         player2 = AgentPlayer(
-            all_states, epsilon=0, estimations=PolicyFileHandler(PLAYER2).load()
+            all_states, epsilon=0, state_values=PolicyFileHandler(PLAYER2).load()
         )
         judger = Judger(player1, player2)
         winner = judger.play(all_states)
@@ -94,9 +97,9 @@ def play(all_states: dict) -> None:
 
 
 if __name__ == "__main__":
-    all_states = StateGenerator().generate()
+    generated_states = StateGenerator().generate()
 
-    train(int(1e4), all_states)
-    compete(int(1e3), all_states)
+    train(int(1e4), generated_states)
+    compete(int(1e3), generated_states)
 
-    play(all_states)
+    play(generated_states)

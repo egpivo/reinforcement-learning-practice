@@ -31,8 +31,9 @@ class Judger:
         alternator = self.alternate()
         self.reset()
         current_state = State()
-        self.player1.set_state(current_state)
-        self.player2.set_state(current_state)
+
+        self.player1.state = current_state
+        self.player2.state = current_state
         if verbose:
             logging.info(current_state)
         while True:
@@ -43,9 +44,8 @@ class Judger:
             next_state_hash = hash(next_state.data)
             current_state, is_end = all_states[next_state_hash]
 
-            self.player1.set_state(current_state)
-            self.player2.set_state(current_state)
-
+            self.player1.state = current_state
+            self.player2.state = current_state
             if verbose:
                 logging.info(current_state)
             if is_end:
