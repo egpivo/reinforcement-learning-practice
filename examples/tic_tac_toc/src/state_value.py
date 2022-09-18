@@ -1,5 +1,3 @@
-from collections import defaultdict
-
 from src.state import State
 from src.utils import hash
 

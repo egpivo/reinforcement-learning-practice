@@ -12,8 +12,8 @@ import logging
 from src import PLAYER1, PLAYER2
 from src.judger import Judger
 from src.player import AgentPlayer, HumanPlayer, PlayerScore
-from src.policy import PolicyFileHandler
 from src.state_generator import StateGenerator
+from src.utils import PolicyFileHandler
 
 logging.basicConfig(level=logging.INFO)
 

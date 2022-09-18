@@ -2,7 +2,7 @@ import logging
 from typing import Any, Generator
 
 from src import PLAYER1, PLAYER2
-from src.player import Player
+from src.player import AgentPlayer, Player
 from src.state import State
 from src.utils import create_next_state, hash
 
@@ -19,8 +19,9 @@ class Judger:
         self.current_state = State()
 
     def reset(self) -> None:
-        self.player1.reset()
-        self.player2.reset()
+        for player in (self.player1, self.player2):
+            if isinstance(player, AgentPlayer):
+                player.reset()
 
     def alternate(self) -> Generator:
         while True:

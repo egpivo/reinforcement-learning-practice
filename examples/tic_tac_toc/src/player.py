@@ -10,9 +10,7 @@ from src.utils import create_next_state, hash, tuplize_enum_values
 
 
 class Player:
-    def reset(self) -> None:
-        return NotImplemented
-
+    @property
     def state(self) -> None:
         return NotImplemented
 
@@ -117,9 +115,6 @@ class HumanPlayer(Player):
         self.keys = ["q", "w", "e", "a", "s", "d", "z", "x", "c"]
         self._state = None
         self._symbol = None
-
-    def reset(self) -> None:
-        pass
 
     @property
     def state(self) -> None:
